@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>曲线图</title>
+	</head>
+	<body>
+		<!-- 构建曲线图的展示区域 -->
+		<div id="container" style="width: 600px;height:400px;"></div> 
+	</body>
+	<!-- 引入echarts的js文件 -->
+	<script src="https://cdn.bootcss.com/echarts/4.3.0-rc.2/echarts.min.js"></script>
+	<!-- 引入jquery文件 -->
+	<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+	<script type="text/javascript">
+		'use strict'
+		// 初始化echarts
+		var myCharts = echarts.init($('#container')[0]);
+		//设置所创建实例的分组,用于联动
+		myCharts.group ='group1'
+		var option = {
+			//组件标题
+			title: {
+				// 是否展示标题,默认为true
+				show: true,
+				// 标题文本
+				text: 'Line Chart',
+				// link:'',			// 标题超链接,默认为''
+				// targe:'self' 当前窗口打开;'blank' 新窗口打开		// 标题链接打开窗口
+				// 主题文本相关css样式设置
+				textStyle:{
+					// 字体颜色
+					color:'plum',
+					// 字体大小,值为数字,无单位
+					fontSize:25,
+					// 字体本身描边颜色
+					textBorderColor:'red',
+					// 字体本身描边宽度
+					textBorderWidth:3,
+					//   ...
+				},
+				subtext:'我是副标题..',
+				textAlign:'left',
+				//zlevel:0,		// zlevel用于 Canvas 分层，不同zlevel值的图形会放置在不同的 Canvas 中，
+								// Canvas 分层是一种常见的优化手段。我们可以把一些图形变化频繁（例如有动画）的组件设置成一个单独的zlevel。
+								// 需要注意的是过多的 Canvas 会引起内存开销的增大，在手机端上需要谨慎使用以防崩溃。
+				//z:0,			//组件的所有图形的z值。控制图形的前后顺序。z值小的图形会被z值大的图形覆盖。
+								//z相比zlevel优先级更低，而且不会创建新的 Canvas。
+			},
+			//直角坐标系内绘图网格，单个 grid 内最多可以放置上下两个 X 轴，左右两个 Y 轴。可以在网格上绘制折线图，柱状图，散点图（气泡图）
+			grid:{
+				show:true,		//默认为false;
+				left:40,
+				top:80,
+				borderColor:'gold',
+				
+			},
+			//提示框组件  可以在多个地方设置:
+										 //可以设置在全局，即 tooltip
+										 //可以设置在坐标系中，即 grid.tooltip、polar.tooltip、single.tooltip
+										 //可以设置在系列中，即 series.tooltip
+										 //可以设置在系列的每个数据项中，即 series.data.tooltip
+			tooltip: {
+				//是否显示提示框,默认为true
+				show:true,
+				//触发类型   默认为'item' 
+				trigger:'axis',	// 可选值:
+								// 		'item'  数据项图形触发，主要在散点图，饼图等无类目轴的图表中使用。
+								// 		'axis'  坐标轴触发，主要在柱状图，折线图等会使用类目轴的图表中使用。
+								// 		'none'  什么都不触发。
+				
+			},
+			
+			
+			// 相关工具按键
+			toolbox: {
+			    feature: {
+		            dataView: {},
+		            saveAsImage: {
+		                pixelRatio: 0
+		            },
+		            restore: {}
+		        }
+		    },
+			// grid中的x轴
+		    xAxis: {
+				// 坐标轴类型,默认为category
+				type:'category',	// 可选值为:
+									// 'value' 数值轴，适用于连续数据。
+									// 'category' 类目轴，适用于离散的类目数据，为该类型时必须通过 data 设置类目数据。
+									// 'time' 时间轴，适用于连续的时序数据，与数值轴相比时间轴带有时间的格式化，
+											   //在刻度计算上也有所不同，例如会根据跨度的范围来决定使用月，星期，日还是小时范围的刻度。
+									// 'log' 对数轴。适用于对数数据。
+				// X轴的名称
+				name:'我是X轴',
+				// X轴名称显示的位置
+				nameLocation:'middle',	//可选值为:'start'、'middle' 或者 'center'、'end',默认为'end'
+				//X轴名称的相关样式
+				nameTextStyle:{
+					color:'red',
+					fontSize:22,
+				},
+				//X轴名称与X轴的距离 默认15
+				nameGap:22,
+				//是否反向X轴,默认为false
+				inverse:false,
+			
+			},
+			
+		    yAxis: {},
+			
+		    series: [{
+		        type: 'line',
+				// smooth属性设置是否为圆滑曲线,值为Boolean类型,为true时为圆滑曲线,为false时为折线
+		        smooth: false,
+		        data: [[12, 5], [24, 20], [36, 36], [48, 10], [60, 7], [72, 20],[84, 25],[96, 37],[108, 27],[120, 50],[132, 29]]
+		    },
+			{
+			    type: 'line',
+				// smooth属性设置是否为圆滑曲线,值为Boolean类型,为true时为圆滑曲线,为false时为折线
+			    smooth: false,
+			    data: [[12, 6], [24, 10], [36, 18], [48, 20], [60, 14], [72, 30],[84, 20],[96, 40],[108, 15],[120, 20],[132, 33]]
+			},
+			
+			]
+		}
+		//设置图表实例的配置项以及数据，万能接口，
+		// 所有参数和数据的修改都可以通过 setOption 完成，
+		// ECharts 会合并新的参数和数据，然后刷新图表。
+		// 如果开启动画的话，
+		// ECharts 找到两组数据之间的差异然后通过合适的动画去表现数据的变化
+		myCharts.setOption(option);		//option		//图表的配置项和数据，具体见配置项手册。
+										//notMerge		//可选，是否不跟之前设置的 option 进行合并，默认为 false，即合并。
+										//lazyUpdate	//可选，在设置完 option 后是否不立即更新图表，默认为 false，即立即更新。
+										//silent		//可选，阻止调用 setOption 时抛出事件，默认为 false，即抛出事件。
+	</script>
+</html>

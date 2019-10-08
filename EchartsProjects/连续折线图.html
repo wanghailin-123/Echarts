@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>柱状图</title>
+		
+	</head>
+	<body>
+		<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+		<div id="main" style="width: 600px;height:400px;"></div>
+	</body>
+	<!-- 引入ECharts的js文件 -->
+	<script src="https://cdn.bootcss.com/echarts/4.3.0-rc.2/echarts.min.js"></script>
+	<!-- 引入jquery文件 -->
+	<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+	<script type="text/javascript">
+		'use strict'
+		
+		
+		function randomData() {
+				//+now==now.ValueOf
+		    now = new Date(+now + oneDay);
+		    value1 = value1 + Math.random() * 41 - 20;
+		    return {
+		        name: now.toString(),
+		        value: [
+		            [now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/'),
+		            Math.round(value1)
+		        ]
+		    }
+		}
+		var data = [];
+		var now = +new Date(1997, 9, 3);
+		var oneDay = 24 * 3600 * 1000;
+		var value1 = Math.random() * 1000;
+		for (var i = 0; i < 1000; i++) {
+		    data.push(randomData());
+		}
+		
+		
+		
+		// 基于准备好的dom，初始化echarts实例
+		var myChart = echarts.init($('#main')[0]);
+		// 指定图表的配置项和数据
+		var option = {
+			 title: {
+			        text: '动态数据 + 时间坐标轴'
+			    },
+			    tooltip: {
+			        trigger: 'axis',
+			        formatter: function (params) {
+			            params = params[0];
+			            var date = new Date(params.name);
+			            return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' : ' + params.value[1];
+			        },
+			        axisPointer: {
+			            animation: false
+			        }
+			    },
+			    xAxis: {
+			        type: 'time',
+			        splitLine: {
+			            show: false
+			        }
+			    },
+			    yAxis: {
+			        type: 'value',
+			        boundaryGap: [0, '100%'],
+			        splitLine: {
+			            show: false
+			        }
+			    },
+			    series: [{
+			        name: '模拟数据',
+			        type: 'line',
+			        showSymbol: false,
+			        hoverAnimation: false,
+			        data: data
+			    }]
+		};
+		
+		// 使用刚指定的配置项和数据显示图表。
+		// myChart.setOption(option);	
+		setInterval(function () {
+		
+		    for (var i = 0; i < 5; i++) {
+		        // data.shift();
+		        data.push(randomData());
+		    }
+		
+		    myChart.setOption({
+		        series: [{
+		            data: data
+		        }]
+		    });
+		}, 1000);
+		
+		
+		
+	</script>
+</html>

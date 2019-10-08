@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>堆积折线图</title>
+		<style type="text/css">
+			#container {
+				border: aqua 1px solid;
+			}
+		</style>
+	</head>
+	<body>
+		<!-- 构建曲线图的展示区域 -->
+		<div id="container" style="width: 800px;height:400px;"></div>
+	</body>
+	<!-- 引入echarts的js文件 -->
+	<script src="https://cdn.bootcss.com/echarts/4.3.0-rc.2/echarts.min.js"></script>
+	<!-- 引入jquery文件 -->
+	<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+	<script type="text/javascript">
+		'use strict'
+		// 初始化echarts
+		var myCharts = echarts.init($('#container')[0]);
+		var option = {
+			//图表的文本标题
+			title: {
+				text: '折线图堆叠'
+			},
+			//提示框组件  可选参数:show(默认true)、trigger(默认'item')、
+			tooltip: {
+				// 提示框的触发类型  默认为item  数据项图形触发，主要在散点图，饼图等无类目轴的图表中使用。
+				// 'axis'   坐标轴触发，主要在柱状图，折线图等会使用类目轴的图表中使用。
+				trigger: 'axis',
+				axisPointer: {
+					type: 'cross'
+				},
+			},
+			legend: {
+				// 图例的数据数组。数组项通常为一个字符串，每一项代表一个系列的 name  若没有指定data数据,会自动从当前系列中获取
+				// data: ['折线一', '折线二', '折线三', '折线四', '我折线五'],
+				top: 25,
+			},
+			grid: {
+				show:true,
+				left: '3%',
+				right: '4%',
+				bottom: '3%',
+				//设置坐标轴是否移动  默认值:false;
+				containLabel: true
+			},
+			//工具栏  内置有导出图片，数据视图，动态类型切换，数据区域缩放，重置五个工具；也可自行定义相关工具、工具名只能以'my'开头。
+			toolbox: {
+				//工具配置项。
+				feature: {
+					//导出图片
+					saveAsImage: {},
+					// 还原
+					restore: {},
+					// 切换为数据视图  仅支持对于坐标系的缩放
+					dataView: {},
+					// 窗口缩放
+					dataZoom: {},
+					// 切换为其他图表类型,如折线图、柱状图、层叠图等
+					magicType: {
+						type: ['line', 'bar','stack']
+					},
+				}
+			},
+			xAxis: {
+				type: 'category',
+				// 坐标轴两边留白策略，类目轴和非类目轴的设置和表现不一样：类目轴的值为Boolean、非类目轴的值为一个两个值的数组。
+				boundaryGap: true,
+				data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+			},
+			yAxis: {
+				type: 'value'
+			},
+			series: [{
+					name: '折线一',
+					type: 'line',
+					// stack: '总量',
+					data: [120, 182, 151, 234, 90, 330, 210, 222]
+				},
+				{
+					name: '折线二',
+					type: 'line',
+					// stack: '总量',
+					data: [130, 122, 191, 204, 190, 230, 310]
+				},
+				{
+					name: '折线三',
+					type: 'line',
+					// stack: '总量',
+					data: [98, 156, 201, 177, 203, 290, 375]
+				},
+				{
+					name: '折线四',
+					type: 'line',
+					// stack: '总量',
+					data: [120, 222, 301, 182, 251, 330, 401]
+				},
+				{
+					name: '折线五',
+					type: 'line',
+					// stack: '总量',
+					data: [87, 152, 556, 476, 80, 150, 173]
+				}
+			]
+		}
+		myCharts.setOption(option);
+	</script>
+</html>

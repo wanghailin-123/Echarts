@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>扇形图</title>
+	</head>
+	<body>
+		<!-- 为ECharts构建一个容器，ECharts所构建的图形在此区域内展示 -->
+		<div id="box" style="width: 600px;height:400px;"></div> 
+	</body>
+	<!-- 引入 ECharts所需的js文件 -->
+	<script src="https://cdn.bootcss.com/echarts/4.3.0-rc.2/echarts.min.js"></script>
+	<!-- 引入jquery文件 -->
+	<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+	<script type="text/javascript">
+		'use strict'
+		// 基于构建的容器,初始化ECharts
+		var myChart = echarts.init($('#box')[0]);
+		// var myBox =  $('#box')[0];
+		// var myChart = echarts.init(myBox);
+		
+		 // 指定图表的相关参数
+		var option = {
+			title: {
+			    text: '我是扇形图..'
+			},
+			series: {
+				
+				name:'分数',
+			    type: 'pie',
+			    data: [
+					{name: 'I am A', value: 10},
+					{name: 'I am B', value: 20},
+					{name: 'I am F', value: 20},
+					{name: 'I am G', value: 20},
+					{name: 'I am C', value: 30},
+					{name: 'I am E', value: 40},
+					{name: 'I am H', value: 40},
+					{name: 'I am D', value: 50},
+			    ]
+			},
+			// 是否展示为南丁格尔图,默认为false
+			roseType: 'angle'
+		};	
+		//使用配置好的参数构建图表
+		myChart.setOption(option);
+	</script>
+</html>

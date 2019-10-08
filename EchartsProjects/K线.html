@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>这是我的K线图</title>
+	</head>
+	<body>
+		<!-- 构建曲线图的展示区域 -->
+		<div id="container" style="width: 800px;height:400px;"></div>
+	</body>
+	<!-- 引入echarts的js文件 -->
+	<script src="https://cdn.bootcss.com/echarts/4.3.0-rc.2/echarts.min.js"></script>
+	<!-- 引入jquery文件 -->
+	<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+	<script type="text/javascript">
+		'use strict'
+		var data0;
+		var upColor = '#ec0000';
+		var upBorderColor = '#8A0000';
+		var downColor = '#00da3c';
+		var downBorderColor = '#008F28';
+		// 从数据源中提取日期数组,并返回该数组
+		function splitData(rawData) {
+			var categoryData = [];
+			var values = []
+			for (var i = 0; i < rawData.length; i++) {
+				//从原数据内容中获取时间信息
+				categoryData.push(rawData[i].splice(0, 1)[0]);
+				//从原数据中获取除时间信息以外的数据  此时的rawData[i]经过splice方法已经不包含日期项
+				values.push(rawData[i])
+			}
+			return {
+				categoryData: categoryData,
+				values: values
+			};
+		}
+		
+
+		// 数据意义：开盘值(open)，收盘值(close)，最低值(lowest)，最高值(highest)
+		data0 = splitData([
+			['2019/08/24', 2320.26, 2320.26, 2287.3, 2362.94],
+			['2019/08/25', 2300, 2291.3, 2288.26, 2308.38],
+			['2019/08/28', 2295.35, 2346.5, 2295.35, 2346.92],
+			['2019/08/29', 2347.22, 2358.98, 2337.35, 2363.8],
+			['2019/08/30', 2360.75, 2382.48, 2347.89, 2383.76],
+			['2019/08/31', 2383.43, 2385.42, 2371.23, 2391.82],
+			['2019/09/1', 2377.41, 2419.02, 2369.57, 2421.15],
+			['2019/09/4', 2425.92, 2428.15, 2417.58, 2440.38],
+			['2019/09/5', 2411, 2433.13, 2403.3, 2437.42],
+			['2019/09/6', 2432.68, 2434.48, 2427.7, 2441.73],
+			['2019/09/7', 2430.69, 2418.53, 2394.22, 2433.89],
+			['2019/09/8', 2416.62, 2432.4, 2414.4, 2443.03],
+			['2019/09/18', 2441.91, 2421.56, 2415.43, 2444.8],
+			['2019/09/19', 2420.26, 2382.91, 2373.53, 2427.07],
+			['2019/09/20', 2383.49, 2397.18, 2370.61, 2397.94],
+			['2019/09/21', 2378.82, 2325.95, 2309.17, 2378.82],
+			['2019/09/22', 2322.94, 2314.16, 2308.76, 2330.88],
+			['2019/09/25', 2320.62, 2325.82, 2315.01, 2338.78],
+			['2019/09/26', 2313.74, 2293.34, 2289.89, 2340.71],
+			['2019/09/27', 2297.77, 2313.22, 2292.03, 2324.63],
+			['2019/09/28', 2322.32, 2365.59, 2308.92, 2366.16],
+			['2019/09/29', 2364.54, 2359.51, 2330.86, 2369.65],
+			['2019/09/30', 2355.74, 2347.88, 2340.86, 2361.65],
+		]);
+
+		function calculateMA(dayCount) {
+			var result = [];
+			for (var i = 0, len = data0.values.length; i < len; i++) {
+				if (i < dayCount) {
+					result.push('-');
+					continue;
+				}
+				var sum = 0;
+				for (var j = 0; j < dayCount; j++) {
+					sum += data0.values[i - j][1];
+				}
+				result.push(sum / dayCount);
+			}
+			return result;
+		}
+		var myCharts = echarts.init($('#container')[0]);
+		var option = {
+			title: {
+				text: '上证指数',
+				left: 0
+			},
+			tooltip: {
+				trigger: 'axis',
+				axisPointer: {
+					type: 'cross'
+				}
+			},
+			legend: {
+				// data: ['日K', 'MA5', 'MA10', 'MA20', 'MA30']
+			},
+			grid: {
+				left: '10%',
+				right: '10%',
+				bottom: '15%'
+			},
+			// 设置X轴的相关信息
+			xAxis: {
+				// 类型为类目轴  默认即为类目轴
+				type: 'category',
+				data: data0.categoryData,
+				// scale: true,		//此属性仅对数值类型有效,X轴默认为类目轴
+				// 坐标轴两边是否留白
+				// boundaryGap: false,
+				axisLine: {
+					onZero: false
+				},
+				// 分割线  类目轴默认不显示分割线
+				splitLine: {
+					// show: false,
+				},
+				// splitNumber: 20,
+
+				min: 'dataMin', // 设置成特殊值 'dataMin'，此时取数据在该轴上的最小值作为最小刻度。
+				max: 'dataMax' // 设置成特殊值 'dataMax'，此时取数据在该轴上的最大值作为最大刻度。
+			},
+			yAxis: {
+				//设置是否不包含零刻度 此属性仅对数值类型轴有效,y轴默认为数值类型,包含零刻度
+				scale: true,
+				splitArea: {
+					show: true
+				}
+			},
+			//图形的缩放区域,
+			dataZoom: [{
+					type: 'inside',
+					//从初始数据的20%处开始展示
+					start: 20,
+					//从初始数据的70%处结束展示
+					end: 60
+				},
+				{}
+			],
+			//设置图形列表
+			series: [
+				{
+					name: '日K',
+					//设置图形为K线图
+					type: 'candlestick',
+					
+					data: data0.values,
+					// 图表的样式设置
+					itemStyle: {
+						normal: {
+							// 阳线  图形的颜色
+							color: upColor,
+							//阴线  图形的颜色
+							color0: downColor,
+							//阳线  图形描边的颜色
+							borderColor: upBorderColor,
+							//阴线  图形描边的颜色
+							borderColor0: downBorderColor
+						}
+					},
+					markPoint: {
+						label: {
+							normal: {
+								formatter: function(param) {
+									return param !== null ? Math.round(param.value) : '';
+								}
+							}
+						},
+						data: [
+							{
+								name: 'XX标点',
+								coord: ['2019/5/31', 2300],
+								value: 2300,
+								itemStyle: {
+									normal: {
+										color: 'rgb(41,60,85)'
+									}
+								}
+							},
+							{
+								name: 'highest value',
+								type: 'max',
+								valueDim: 'highest',
+								// itemStyle:{
+								// 	color: 'rgb(41,60,85)'
+								// }
+							},
+							{
+								name: 'lowest value',
+								type: 'min',
+								valueDim: 'lowest'
+							},
+							{
+								name: 'average value on close',
+								type: 'average',
+								valueDim: 'close'
+							}
+						],
+						// tooltip: {
+						// 	formatter: function(param) {
+						// 		return param.name + '<br>' + (param.data.coord || '');
+						// 	}
+						// }
+					},
+					markLine: {
+						symbol: ['none', 'none'],
+						data: [
+							[
+								{
+									name: 'from lowest to highest',
+									type: 'min',
+									valueDim: 'lowest',
+									symbol: 'circle',
+									symbolSize: 10,
+									label: {
+										normal: {
+											show: false
+										},
+										emphasis: {
+											show: false
+										}
+									}
+								},
+								{
+									type: 'max',
+									valueDim: 'highest',
+									symbol: 'circle',
+									symbolSize: 10,
+									label: {
+										normal: {
+											show: false
+										},
+										emphasis: {
+											show: false
+										}
+									}
+								}
+							],
+							{
+								name: 'min line on close',
+								type: 'min',
+								valueDim: 'close'
+							},
+							{
+								name: 'max line on close',
+								type: 'max',
+								valueDim: 'close'
+							}
+						]
+					}
+				},
+				{
+					name: 'MA5',
+					type: 'line',
+					data: calculateMA(5),
+					smooth: true,
+					lineStyle: {
+						normal: {
+							opacity: 0.5
+						}
+					}
+				},
+				{
+					name: 'MA10',
+					type: 'line',
+					data: calculateMA(10),
+					smooth: true,
+					lineStyle: {
+						normal: {
+							opacity: 0.5
+						}
+					}
+				},
+				{
+					name: 'MA20',
+					type: 'line',
+					data: calculateMA(20),
+					smooth: true,
+					lineStyle: {
+						normal: {
+							opacity: 0.5
+						}
+					}
+				},
+				{
+					name: 'MA30',
+					type: 'line',
+					data: calculateMA(30),
+					smooth: true,
+					lineStyle: {
+						normal: {
+							opacity: 0.5
+						}
+					}
+				},
+
+			]
+		};
+		myCharts.setOption(option);
+	</script>
+</html>

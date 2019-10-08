@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<!-- 构建曲线图的展示区域 -->
+		<div id="container" style="width: 800px;height:400px;"></div>
+	</body>
+	<!-- 引入echarts的js文件 -->
+	<script src="https://cdn.bootcss.com/echarts/4.3.0-rc.2/echarts.min.js"></script>
+	<!-- 引入jquery文件 -->
+	<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+	<script type="text/javascript">
+		'use strict'
+
+		var dataX = [];
+		var data01 = [];
+		var data02 = [];
+		var data03 = [];
+		var data04 = [];
+		var data05 = [];
+		for (var i = 1; i < 11; i++) {
+			dataX.push(i)
+			data01.push((Math.random() * 10 + 5).toFixed(1));
+			data02.push((Math.random() * 20 + 10).toFixed(1));
+			data03.push((Math.random() * 30 + 10).toFixed(1));
+			data04.push((Math.random() * 40 + 10).toFixed(1));
+			data05.push((Math.random() * 20 + 10).toFixed(1));
+		}
+		// 初始化echarts
+		var myCharts = echarts.init($('#container')[0]);
+		var option = {
+			title: {
+				text: '动态数据',
+				subtext: '纯属虚构'
+			},
+			tooltip: {
+				trigger: 'axis',
+				axisPointer: {
+					type: 'cross',
+					label: {
+						backgroundColor: '#283b56'
+					}
+				}
+			},
+			legend: {
+				// data:['最新成交价', '预购队列']
+			},
+			toolbox: {
+				show: true,
+				feature: {
+					dataView: {
+						readOnly: false
+					},
+					restore: {},
+					saveAsImage: {}
+				}
+			},
+			dataZoom: {
+				show: false,
+				start: 0,
+				end: 100
+			},
+			xAxis: [{
+				type: 'category',
+				boundaryGap: true,
+				data: dataX,
+			}],
+			yAxis: [{
+				type: 'value',
+				scale: true,
+				name: '价格',
+				min: 0,
+				boundaryGap: [0.2, 0.2]
+			}],
+			//图形的缩放区域,
+			dataZoom: [{
+					type: 'inside',
+					//从初始数据的20%处开始展示
+					start: 20,
+					//从初始数据的70%处结束展示
+					end: 60
+				},
+				{}
+			],
+			// brush: {
+			// 	xAxisIndex: 'all',
+			// 	brushLink: 'all',
+			// 	outOfBrush: {
+			// 		colorAlpha: 0.1
+			// 	}
+			// },
+			series: [{
+
+					name: '数据一',
+					type: 'line',
+					data: data01,
+				},
+				{
+					name: '数据二',
+					type: 'line',
+					data: data02,
+				},
+				{
+					name: '数据三',
+					type: 'line',
+					data: data03,
+				},
+				{
+					name: '数据四',
+					type: 'line',
+					data: data04,
+				},
+				{
+					name: '数据五',
+					type: 'line',
+					data: data05,
+				},
+			]
+		};
+		myCharts.setOption(option);
+		var count = 11;
+		setInterval(function() {
+			data01.push((Math.random() * 10 + 5).toFixed(1));
+			data02.push((Math.random() * 20).toFixed(1));
+			data03.push((Math.random() * 30).toFixed(1));
+			data04.push((Math.random() * 40).toFixed(1));
+			data05.push((Math.random() * 20).toFixed(1));
+			dataX.push(count++);
+			myCharts.setOption(option);
+		}, 5000);
+	</script>
+</html>
